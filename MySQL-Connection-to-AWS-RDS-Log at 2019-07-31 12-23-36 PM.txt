@@ -1,0 +1,81 @@
+Last login: Tue Jul 30 10:45:00 on ttys002
+(base) mac-2820:~ dbadu$ ssh 100.24.99.188
+The authenticity of host '100.24.99.188 (100.24.99.188)' can't be established.
+ECDSA key fingerprint is SHA256:ti4q2lSNeRz2R4o2Rt2Uqxgqb+CcMjIL+Yi5+gyREiA.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '100.24.99.188' (ECDSA) to the list of known hosts.
+dbadu@100.24.99.188: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+(base) mac-2820:~ dbadu$ ssh ec2-user@100.24.99.188
+ec2-user@100.24.99.188: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+(base) mac-2820:~ dbadu$ ssh ec2-user@100.24.99.188 -i ~/Desktop/RDS_Terraform_Configuration/bastion.pem
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Permissions 0755 for '/Users/dbadu/Desktop/RDS_Terraform_Configuration/bastion.pem' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+Load key "/Users/dbadu/Desktop/RDS_Terraform_Configuration/bastion.pem": bad permissions
+ec2-user@100.24.99.188: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+(base) mac-2820:~ dbadu$ chmod 600 ~/Desktop/RDS_Terraform_Configuration/bastion.pem
+(base) mac-2820:~ dbadu$ ssh ec2-user@100.24.99.188 -i ~/Desktop/RDS_Terraform_Configuration/bastion.pem
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux 2 AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-2/
+3 package(s) needed for security, out of 8 available
+Run "sudo yum update" to apply all updates.
+[ec2-user@ip-172-0-1-242 ~]$ sudo yum install mysql
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+amzn2-core                                                                                  | 2.4 kB  00:00:00
+Resolving Dependencies
+--> Running transaction check
+---> Package mariadb.x86_64 1:5.5.62-1.amzn2.0.1 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+===================================================================================================================
+ Package                Arch                  Version                              Repository                 Size
+===================================================================================================================
+Installing:
+ mariadb                x86_64                1:5.5.62-1.amzn2.0.1                 amzn2-core                9.0 M
+
+Transaction Summary
+===================================================================================================================
+Install  1 Package
+
+Total download size: 9.0 M
+Installed size: 49 M
+Is this ok [y/d/N]: y
+Downloading packages:
+mariadb-5.5.62-1.amzn2.0.1.x86_64.rpm                                                       | 9.0 MB  00:00:00
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : 1:mariadb-5.5.62-1.amzn2.0.1.x86_64                                                             1/1
+  Verifying  : 1:mariadb-5.5.62-1.amzn2.0.1.x86_64                                                             1/1
+
+Installed:
+  mariadb.x86_64 1:5.5.62-1.amzn2.0.1
+
+Complete!
+[ec2-user@ip-172-0-1-242 ~]$ mysql mysql -h aurora-rds-cluster.cluster-cjvmru6x2ucp.us-east-1.rds.amazonaws.com
+ERROR 1045 (28000): Access denied for user 'ec2-user'@'172.0.1.242' (using password: NO)
+[ec2-user@ip-172-0-1-242 ~]$ mysql mysql -h aurora-rds-cluster.cluster-cjvmru6x2ucp.us-east-1.rds.amazonaws.com -u admin -p
+Enter password:
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 74
+Server version: 5.7.12 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [mysql]> packet_write_wait: Connection to 100.24.99.188 port 22: Broken pipe
+(base) mac-2820:~ dbadu$
